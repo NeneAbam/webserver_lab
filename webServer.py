@@ -1,38 +1,56 @@
 from socket import *
+import sys
 
-serverPort = 13331
+def webServer(serverPort):
 
-# Create socket
-serverSocket = socket(AF_INET, SOCK_STREAM)
+    # Create server socket
+    serverSocket = socket(AF_INET, SOCK_STREAM)
 
-# Bind to port
-serverSocket.bind(('', serverPort))
+    # Prepare the server socket
+    serverSocket.bind(('', serverPort))
 
-# Listen
-serverSocket.listen(1)
+    # Fill in start
+    serverSocket.listen(1)
+    # Fill in end
 
-print("Ready to serve...")
+    print('Ready to serve...')
 
-while True:
-    connectionSocket, addr = serverSocket.accept()
+    while True:
 
-    try:
-        message = connectionSocket.recv(1024).decode()
-        filename = message.split()[1]
+        # Fill in start
+        connectionSocket, addr = serverSocket.accept()
+        # Fill in end
 
-        f = open(filename[1:])
-        outputdata = f.read()
+        try:
 
-        connectionSocket.send("HTTP/1.1 200 OK\r\n\r\n".encode())
+            # Fill in start
+            message = connectionSocket.recv(1024).decode()
+            # Fill in end
 
-        for i in range(0, len(outputdata)):
-            connectionSocket.send(outputdata[i].encode())
+            filename = message.split()[1]
+            f = open(filename[1:])
+            outputdata = f.read()
 
-        connectionSocket.send("\r\n".encode())
+            # Fill in start
+            connectionSocket.send("HTTP/1.1 200 OK\r\n\r\n".encode())
+            # Fill in end
 
-        connectionSocket.close()
+            # Send the content of the requested file to the client
+            for i in range(0, len(outputdata)):
+                connectionSocket.send(outputdata[i].encode())
 
-    except IOError:
-        connectionSocket.send("HTTP/1.1 404 Not Found\r\n\r\n".encode())
-        connectionSocket.send("<html><body><h1>404 Not Found</h1></body></html>\r\n".encode())
-        connectionSocket.close()
+            connectionSocket.send("\r\n".encode())
+            connectionSocket.close()
+
+        except IOError:
+
+            # Fill in start
+            connectionSocket.send("HTTP/1.1 404 Not Found\r\n\r\n".encode())
+            connectionSocket.send("<html><body><h1>404 Not Found</h1></body></html>\r\n".encode())
+            connectionSocket.close()
+            # Fill in end
+
+    serverSocket.close()
+
+if __name__ == "__main__":
+    webServer(13331)
