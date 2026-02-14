@@ -53,4 +53,5 @@ def webServer(serverPort):
     serverSocket.close()
 
 if __name__ == "__main__":
-    webServer(13331)
+    serverPort = int(sys.argv[1])
+    webServer(serverPort)
